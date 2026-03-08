@@ -3,108 +3,147 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Web Access v1.0</title>
+    <title>Portal de Pesquisa Acadêmica</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         
         body {
             background-color: #222;
             color: #00d4ff;
-            font-family: 'Consolas', monospace;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
             height: 100vh;
             display: flex;
             flex-direction: column;
             overflow: hidden;
         }
 
-        /* Barra de Navegação */
-        .navbar {
+        /* Barra Superior Estilizada */
+        .header {
             background-color: #1a1a1a;
-            padding: 15px;
+            padding: 12px 20px;
             display: flex;
-            gap: 10px;
+            align-items: center;
+            gap: 15px;
             border-bottom: 2px solid #00d4ff;
-            box-shadow: 0 4px 15px rgba(0, 212, 255, 0.2);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            z-index: 10;
+        }
+
+        .logo {
+            font-weight: bold;
+            font-size: 1.2rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .search-container {
+            flex-grow: 1;
+            display: flex;
+            gap: 8px;
         }
 
         input {
             flex-grow: 1;
-            padding: 10px 20px;
+            padding: 10px 15px;
             background: #333;
-            border: 1px solid #00d4ff;
-            border-radius: 5px;
+            border: 1px solid #444;
+            border-radius: 4px;
             color: #fff;
             outline: none;
+            transition: border 0.3s;
+        }
+
+        input:focus {
+            border-color: #00d4ff;
         }
 
         button {
-            padding: 10px 25px;
+            padding: 10px 20px;
             background: #00d4ff;
-            color: #222;
+            color: #1a1a1a;
             border: none;
-            border-radius: 5px;
+            border-radius: 4px;
             font-weight: bold;
             cursor: pointer;
-            transition: 0.3s;
+            text-transform: uppercase;
+            transition: 0.2s;
         }
 
         button:hover {
-            background: #0099bb;
-            box-shadow: 0 0 10px #00d4ff;
+            background: #00b8dd;
+            transform: scale(1.02);
         }
 
-        /* Área do Conteúdo */
-        #proxy-container {
+        /* Container do Iframe */
+        #content-frame {
             flex-grow: 1;
             width: 100%;
+            height: 100%;
             border: none;
-            background: #fff; /* Fundo branco para os sites carregarem corretamente */
+            background: #fff; /* Fundo branco para compatibilidade com sites externos */
         }
 
-        .welcome-msg {
+        .placeholder {
+            flex-grow: 1;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            height: 100%;
             text-align: center;
+            background: #222;
         }
+
+        .placeholder h2 { margin-bottom: 10px; }
+        .placeholder p { color: #888; }
     </style>
 </head>
 <body>
 
-    <div class="navbar">
-        <input type="text" id="url-input" placeholder="https://exemplo.com" onkeydown="if(event.key==='Enter') launch()">
-        <button onclick="launch()">ACESSAR</button>
+    <div class="header">
+        <div class="logo">WEB<span>CORE</span></div>
+        <div class="search-container">
+            <input type="text" id="url-input" placeholder="Digite uma URL ou pesquise algo..." autocomplete="off">
+            <button onclick="nav()">ACESSAR</button>
+        </div>
     </div>
 
-    <div id="view" style="flex-grow: 1;">
-        <div id="msg" class="welcome-msg">
-            <h2>AGUARDANDO CONEXÃO...</h2>
-            <p style="color: #666; margin-top: 10px;">Digite uma URL e pressione Enter.</p>
+    <div id="main-view" style="flex-grow: 1; display: flex; flex-direction: column;">
+        <div id="home-screen" class="placeholder">
+            <h2>SISTEMA PRONTO</h2>
+            <p>Insira o destino para iniciar a navegação segura.</p>
         </div>
-        <iframe id="proxy-container" style="display: none;"></iframe>
+        <iframe id="content-frame" style="display: none;"></iframe>
     </div>
 
     <script>
-        function launch() {
-            let url = document.getElementById('url-input').value;
-            const iframe = document.getElementById('proxy-container');
-            const msg = document.getElementById('msg');
+        const input = document.getElementById('url-input');
+        const frame = document.getElementById('content-frame');
+        const home = document.getElementById('home-screen');
 
-            if (!url) return;
+        // Atalho para o Enter
+        input.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') nav();
+        });
 
-            // Adiciona https:// caso o usuário esqueça
-            if (!url.startsWith('http')) {
-                url = 'https://' + url;
+        function nav() {
+            let val = input.value.trim();
+            if (!val) return;
+
+            let targetUrl;
+            
+            // Lógica de Detecção: Se não tem ponto ou tem espaço, é pesquisa no Google
+            if (!val.includes('.') || val.includes(' ')) {
+                targetUrl = 'https://www.google.com/search?q=' + encodeURIComponent(val);
+            } else {
+                targetUrl = val.startsWith('http') ? val : 'https://' + val;
             }
 
-            // Usando o serviço CroxyProxy como motor (mais estável para iframe único)
-            const proxyService = "https://www.croxyproxy.com/_proxy/php?url=";
+            // Motor de Proxy (Utilizando serviço estável de terceiros)
+            const proxyGate = "https://www.croxyproxy.com/_proxy/php?url=";
             
-            msg.style.display = 'none';
-            iframe.style.display = 'block';
-            iframe.src = proxyService + encodeURIComponent(url);
+            home.style.display = 'none';
+            frame.style.display = 'block';
+            frame.src = proxyGate + encodeURIComponent(targetUrl);
         }
     </script>
 </body>
