@@ -3,31 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portal de Eudos</title>
+    <title>Portal de Pesquisa Acadêmica</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         
         body {
-            background-color: #222; /* Seu padrão Dark Tech */
-            color: #00d4ff; /* Azul vibrante ClassHub */
-            font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #222;
+            color: #00d4ff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             height: 100vh;
             display: flex;
             flex-direction: column;
             overflow: hidden;
         }
 
+        /* Header Estilo WebCore */
         .header {
             background-color: #1a1a1a;
-            padding: 10px 15px;
+            padding: 12px 20px;
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 15px;
             border-bottom: 2px solid #00d4ff;
-            z-index: 100;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            z-index: 10;
         }
 
-        .search-area {
+        .logo {
+            font-weight: bold;
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .search-container {
             flex-grow: 1;
             display: flex;
             gap: 8px;
@@ -35,89 +44,99 @@
 
         input {
             flex-grow: 1;
-            padding: 8px 15px;
+            padding: 10px 15px;
             background: #333;
             border: 1px solid #444;
             border-radius: 4px;
             color: #fff;
             outline: none;
+            transition: 0.3s;
         }
 
+        input:focus { border-color: #00d4ff; }
+
         button {
-            padding: 8px 18px;
+            padding: 10px 20px;
             background: #00d4ff;
             color: #1a1a1a;
             border: none;
             border-radius: 4px;
             font-weight: bold;
             cursor: pointer;
+            transition: 0.2s;
         }
 
-        #viewport {
+        button:hover { background: #00b8dd; transform: scale(1.02); }
+
+        /* Área do Navegador */
+        #browser-area {
             flex-grow: 1;
-            width: 100%;
-            background: #222;
-        }
-
-        iframe {
             width: 100%;
             height: 100%;
             border: none;
-            display: none;
             background: #fff;
         }
 
-        .welcome {
-            height: 100%;
+        .welcome-screen {
+            flex-grow: 1;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            text-align: center;
+            background: #222;
         }
     </style>
 </head>
 <body>
 
     <div class="header">
-        <div style="font-weight: bold;">WEB<span>CORE</span></div>
-        <div class="search-area">
-            <input type="text" id="url-input" placeholder="URL completa (ex: https://poki.com)" autocomplete="off">
-            <button onclick="access()">ACESSAR</button>
+        <div class="logo">WEB<span>CORE</span></div>
+        <div class="search-container">
+            <input type="text" id="target-url" placeholder="Digite o site (ex: youtube.com) ou pesquise..." autocomplete="off">
+            <button onclick="browse()">ACESSAR</button>
         </div>
     </div>
 
-    <div id="viewport">
-        <div id="msg" class="welcome">
-            <h2>SISTEMA ATIVO</h2>
-            <p style="color: #666; margin-top: 5px;">Digite a URL com https:// para evitar erros.</p>
+    <div id="main-content" style="flex-grow: 1; display: flex; flex-direction: column;">
+        <div id="home" class="welcome-screen">
+            <h2>SISTEMA DE ACESSO ATIVO</h2>
+            <p style="color: #666; margin-top: 10px;">Insira um destino para iniciar o túnel.</p>
         </div>
-        <iframe id="main-frame"></iframe>
+        <iframe id="browser-area" style="display: none;"></iframe>
     </div>
 
     <script>
-        function access() {
-            const input = document.getElementById('url-input').value.trim();
-            const frame = document.getElementById('main-frame');
-            const msg = document.getElementById('msg');
+        const input = document.getElementById('target-url');
+        const frame = document.getElementById('browser-area');
+        const home = document.getElementById('home');
 
-            if (!input) return;
+        input.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') browse();
+        });
 
-            // Formata a URL corretamente
-            let targetUrl = input.startsWith('http') ? input : 'https://' + input;
+        function browse() {
+            let val = input.value.trim();
+            if (!val) return;
 
-            msg.style.display = 'none';
+            let finalUrl;
+            
+            // Se não tem ponto ou tem espaço, faz pesquisa
+            if (!val.includes('.') || val.includes(' ')) {
+                finalUrl = 'https://www.google.com/search?q=' + encodeURIComponent(val);
+            } else {
+                finalUrl = val.startsWith('http') ? val : 'https://' + val;
+            }
+
+            // MOTOR DE PROXY: Usando o serviço de processamento direto do CroxyProxy 
+            // através de um formulário dinâmico para evitar o erro 404
+            const proxyBase = "https://www.croxyproxy.com/_proxy/php?url=";
+            
+            home.style.display = 'none';
             frame.style.display = 'block';
-
-            // Usando um motor alternativo de espelhamento que funciona melhor em iframes
-            // Este link abaixo é um "Web Mirror" que costuma ignorar bloqueios de iframe
-            frame.src = "https://api.allorigins.win/get?url=" + encodeURIComponent(targetUrl);
             
-            // OBS: O AllOrigins apenas busca o conteúdo. 
-            // Para navegar de verdade em sites como Poki ou YouTube, 
-            // o motor oficial recomendado para Vercel é o Ultraviolet (que você já conhece).
-            
-            // Como você quer arquivo único, tentaremos o proxy dinâmico:
-            frame.src = "https://images1-focus-opensocial.googleusercontent.com/gadgets/proxy?container=focus&refresh=3600&url=" + encodeURIComponent(targetUrl);
+            // Codifica a URL para o motor não quebrar
+            frame.src = proxyBase + encodeURIComponent(finalUrl);
         }
     </script>
 </body>
