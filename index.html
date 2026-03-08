@@ -3,136 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Class Unblocker | Stealth Mode</title>
+    <title>Class Unblocker | Stealth</title>
     <style>
-        /* Estética Dark Tech que você prefere */
-        body {
-            background-color: #222;
-            color: #fff;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
-            overflow: hidden;
-        }
-
-        .container {
-            text-align: center;
-            width: 90%;
-            max-width: 500px;
-        }
-
-        h1 {
-            color: #007bff; /* Azul vibrante */
-            font-size: 2.5rem;
-            margin-bottom: 20px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-
-        .input-group {
-            position: relative;
-            margin-top: 30px;
-        }
-
-        input {
-            width: 100%;
-            padding: 15px;
-            background: #333;
-            border: 2px solid #007bff;
-            border-radius: 8px;
-            color: white;
-            font-size: 1rem;
-            outline: none;
-            box-sizing: border-box;
-            transition: 0.3s;
-        }
-
-        input:focus {
-            box-shadow: 0 0 15px rgba(0, 123, 255, 0.5);
-        }
-
-        button {
-            margin-top: 20px;
-            padding: 12px 30px;
-            background-color: #007bff;
-            border: none;
-            border-radius: 5px;
-            color: white;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.3s;
-            text-transform: uppercase;
-        }
-
-        button:hover {
-            background-color: #0056b3;
-            transform: scale(1.05);
-        }
-
-        p {
-            color: #888;
-            font-size: 0.9rem;
-            margin-top: 15px;
-        }
+        body { background-color: #222; color: #fff; font-family: sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; }
+        .container { text-align: center; }
+        h1 { color: #007bff; text-transform: uppercase; }
+        input { padding: 15px; width: 300px; background: #333; border: 2px solid #007bff; color: white; border-radius: 5px; outline: none; }
+        button { padding: 15px; background: #007bff; border: none; color: white; cursor: pointer; border-radius: 5px; font-weight: bold; }
+        button:hover { background: #0056b3; }
     </style>
 </head>
 <body>
 
     <div class="container">
         <h1>Class Unblocker</h1>
-        <div class="input-group">
-            <input type="text" id="urlInput" placeholder="Cole o link aqui (ex: https://google.com)">
-            <button onclick="launchStealth()">Abrir Unblocked</button>
-        </div>
-        <p>Abre em uma aba about:blank sem Iframe.</p>
+        <input type="text" id="urlInput" placeholder="Ex: google.com">
+        <button onclick="launch()">Abrir</button>
     </div>
 
-    <script>
-        async function launchStealth() {
-            let url = document.getElementById('urlInput').value;
+    <script src="/uv/uv.bundle.js"></script>
+    <script src="/uv/uv.config.js"></script>
 
-            if (!url) {
-                alert("Por favor, insira uma URL.");
+    <script>
+        async function launch() {
+            const url = document.getElementById('urlInput').value;
+            if (!url) return;
+
+            // 1. Abre a aba em branco primeiro
+            const win = window.open('about:blank', '_blank');
+            if (!win) {
+                alert("Ative os pop-ups para funcionar!");
                 return;
             }
 
-            // Garante que a URL tenha o protocolo correto
-            if (!url.startsWith('http')) {
-                url = 'https://' + url;
-            }
+            // 2. Codifica a URL para o formato do Ultraviolet
+            // Isso evita o erro de "Tela Branca" (CORS)
+            const proxiedUrl = __uv$config.prefix + __uv$config.encodeUrl(url);
 
-            try {
-                // Abre a aba imediatamente para evitar bloqueio de popup
-                const newWin = window.open('about:blank', '_blank');
-
-                // Busca o conteúdo (Atenção: pode precisar do seu proxy para evitar CORS)
-                const response = await fetch(url);
-                const html = await response.text();
-
-                // Cria um Blob com o HTML do site
-                const blob = new Blob([html], { type: 'text/html' });
-                const blobUrl = URL.createObjectURL(blob);
-
-                // Redireciona a aba em branco para o conteúdo do Blob
-                // Isso mantém o "about:blank" em alguns navegadores ou mascara a origem
-                newWin.location.href = blobUrl;
-
-            } catch (err) {
-                console.error("Erro ao processar unblock:", err);
-                alert("Erro ao carregar o site. Certifique-se de que o link é válido ou se o proxy está ativo.");
-            }
+            // 3. Escreve o conteúdo diretamente no about:blank
+            // Usamos um script de carregamento para garantir que o CSS e JS do site funcionem
+            win.document.write(`
+                <title>Google Drive</title>
+                <style>body { margin: 0; padding: 0; overflow: hidden; background: #000; }</style>
+                <script>
+                    window.location.href = "${window.location.origin}${proxiedUrl}";
+                <\/script>
+            `);
         }
-
-        // Atalho para o Enter
-        document.getElementById('urlInput').addEventListener('keypress', function (e) {
-            if (e.key === 'Enter') {
-                launchStealth();
-            }
-        });
     </script>
 </body>
 </html>
