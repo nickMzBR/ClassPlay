@@ -3,106 +3,108 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Class Unblocker | Ultra Stealth</title>
+    <title>Web Access v1.0</title>
     <style>
-        /* Estética Dark Tech que você utiliza em seus projetos */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
         body {
-            background-color: #222; /* Fundo padrão dos seus apps */
-            color: #fff;
-            font-family: 'Segoe UI', sans-serif;
+            background-color: #222;
+            color: #00d4ff;
+            font-family: 'Consolas', monospace;
+            height: 100vh;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
+            overflow: hidden;
         }
 
-        .box {
-            background: #2a2a2a;
-            padding: 40px;
-            border-radius: 15px;
-            border: 2px solid #007bff; /* Azul vibrante ClassHub */
-            box-shadow: 0 0 20px rgba(0, 123, 255, 0.3);
-            text-align: center;
-        }
-
-        h1 {
-            color: #007bff;
-            margin-bottom: 25px;
-            text-transform: uppercase;
+        /* Barra de Navegação */
+        .navbar {
+            background-color: #1a1a1a;
+            padding: 15px;
+            display: flex;
+            gap: 10px;
+            border-bottom: 2px solid #00d4ff;
+            box-shadow: 0 4px 15px rgba(0, 212, 255, 0.2);
         }
 
         input {
-            width: 280px;
-            padding: 12px;
-            background: #111;
-            border: 1px solid #444;
-            color: #00ff00;
+            flex-grow: 1;
+            padding: 10px 20px;
+            background: #333;
+            border: 1px solid #00d4ff;
             border-radius: 5px;
+            color: #fff;
             outline: none;
         }
 
         button {
-            padding: 12px 25px;
-            background: #007bff;
+            padding: 10px 25px;
+            background: #00d4ff;
+            color: #222;
             border: none;
-            color: white;
             border-radius: 5px;
-            cursor: pointer;
             font-weight: bold;
+            cursor: pointer;
             transition: 0.3s;
         }
 
         button:hover {
-            background: #0056b3;
-            transform: scale(1.05);
+            background: #0099bb;
+            box-shadow: 0 0 10px #00d4ff;
+        }
+
+        /* Área do Conteúdo */
+        #proxy-container {
+            flex-grow: 1;
+            width: 100%;
+            border: none;
+            background: #fff; /* Fundo branco para os sites carregarem corretamente */
+        }
+
+        .welcome-msg {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            text-align: center;
         }
     </style>
 </head>
 <body>
 
-    <div class="box">
-        <h1>UNBLOCKER</h1>
-        <input type="text" id="urlInput" placeholder="Ex: instagram.com">
-        <button onclick="launch()">ABRIR</button>
+    <div class="navbar">
+        <input type="text" id="url-input" placeholder="https://exemplo.com" onkeydown="if(event.key==='Enter') launch()">
+        <button onclick="launch()">ACESSAR</button>
+    </div>
+
+    <div id="view" style="flex-grow: 1;">
+        <div id="msg" class="welcome-msg">
+            <h2>AGUARDANDO CONEXÃO...</h2>
+            <p style="color: #666; margin-top: 10px;">Digite uma URL e pressione Enter.</p>
+        </div>
+        <iframe id="proxy-container" style="display: none;"></iframe>
     </div>
 
     <script>
         function launch() {
-            let url = document.getElementById('urlInput').value;
-            if (!url) return alert("Insira um link!");
+            let url = document.getElementById('url-input').value;
+            const iframe = document.getElementById('proxy-container');
+            const msg = document.getElementById('msg');
 
-            // Limpa a URL
-            url = url.replace(/^https?:\/\//, '');
+            if (!url) return;
 
-            // Abre a aba about:blank imediatamente
-            const win = window.open('about:blank', '_blank');
+            // Adiciona https:// caso o usuário esqueça
+            if (!url.startsWith('http')) {
+                url = 'https://' + url;
+            }
+
+            // Usando o serviço CroxyProxy como motor (mais estável para iframe único)
+            const proxyService = "https://www.croxyproxy.com/_proxy/php?url=";
             
-            if (!win) return alert("Permita os pop-ups!");
-
-            // Usando um serviço de "CORS Proxy" público para injetar o conteúdo
-            // Isso resolve o problema da tela branca do seu print
-            const proxyUrl = "https://api.allorigins.win/raw?url=" + encodeURIComponent("https://" + url);
-
-            const content = `
-                <!DOCTYPE html>
-                <html>
-                <head>
-                    <title>Google Drive</title> <style>
-                        body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; background: #fff; }
-                        iframe { width: 100%; height: 100%; border: none; }
-                    </style>
-                </head>
-                <body>
-                    <iframe src="${proxyUrl}"></iframe>
-                </body>
-                </html>
-            `;
-
-            win.document.open();
-            win.document.write(content);
-            win.document.close();
+            msg.style.display = 'none';
+            iframe.style.display = 'block';
+            iframe.src = proxyService + encodeURIComponent(url);
         }
     </script>
 </body>
