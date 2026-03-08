@@ -20,7 +20,6 @@ body::before{content:'';position:fixed;inset:0;
   pointer-events:none;z-index:0}
 ::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
 
-/* HEADER */
 header{position:sticky;top:0;z-index:999;background:rgba(13,13,18,.97);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
 .h-inner{max-width:1560px;margin:0 auto;padding:0 1.5rem;display:flex;align-items:center;gap:1.2rem;height:62px}
 .logo{font-family:'Orbitron',monospace;font-weight:900;font-size:1.3rem;color:var(--a);letter-spacing:.05em;cursor:pointer;flex-shrink:0;text-shadow:0 0 20px rgba(0,209,255,.4)}
@@ -33,7 +32,6 @@ header{position:sticky;top:0;z-index:999;background:rgba(13,13,18,.97);backdrop-
 .h-count{font-family:'Orbitron',monospace;font-size:.62rem;color:var(--t3);letter-spacing:.1em;flex-shrink:0}
 .h-count b{color:var(--a)}
 
-/* CATBAR */
 .catbar{background:rgba(13,13,18,.94);border-bottom:1px solid var(--border);padding:0 1.5rem;overflow-x:auto;scrollbar-width:none;position:sticky;top:62px;z-index:998}
 .catbar::-webkit-scrollbar{display:none}
 .cat-inner{max-width:1560px;margin:0 auto;display:flex;gap:.25rem;padding:.45rem 0}
@@ -41,23 +39,20 @@ header{position:sticky;top:0;z-index:999;background:rgba(13,13,18,.97);backdrop-
 .cat-btn:hover{color:var(--a);border-color:var(--border)}
 .cat-btn.on{color:var(--a);border-color:var(--a);background:var(--ag2)}
 
-/* MAIN */
 main{max-width:1560px;margin:0 auto;padding:1.5rem;position:relative;z-index:1}
 .sec-label{font-family:'Orbitron',monospace;font-size:.7rem;letter-spacing:.18em;color:var(--t3);text-transform:uppercase;display:flex;align-items:center;gap:.75rem;margin-bottom:1.2rem}
 .sec-label::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,var(--border),transparent)}
 
-/* GRID */
 #grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(165px,1fr));gap:1rem}
 #empty{display:none;text-align:center;padding:5rem;font-family:'Orbitron',monospace;font-size:.8rem;letter-spacing:.15em;color:var(--t3)}
 
-/* CARD */
 .card{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;cursor:pointer;transition:transform .18s,border-color .2s,box-shadow .2s;position:relative;animation:pop .25s ease both}
 .card:hover{transform:translateY(-5px) scale(1.03);border-color:var(--border2);box-shadow:0 12px 36px rgba(0,0,0,.5),0 0 22px var(--ag)}
 @keyframes pop{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 .card-thumb{width:100%;aspect-ratio:4/3;background:var(--card2);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
 .card-thumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.card-thumb .em{font-size:3.2rem;filter:drop-shadow(0 0 10px rgba(0,209,255,.35))}
-.card-play{position:absolute;top:0;left:0;right:0;bottom:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.58);opacity:0;transition:opacity .2s}
+.card-thumb .em{font-size:3.2rem;filter:drop-shadow(0 0 10px rgba(0,209,255,.35));position:relative;z-index:1}
+.card-play{position:absolute;top:0;left:0;right:0;bottom:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.58);opacity:0;transition:opacity .2s;z-index:2}
 .card:hover .card-play{opacity:1}
 .card-play span{background:var(--a);color:#000;font-family:'Orbitron',monospace;font-size:.68rem;font-weight:700;letter-spacing:.1em;padding:.45rem 1.1rem;border-radius:50px;text-transform:uppercase}
 .card-body{padding:.65rem .8rem .8rem}
@@ -72,10 +67,9 @@ main{max-width:1560px;margin:0 auto;padding:1.5rem;position:relative;z-index:1}
 .ov-btn{background:none;border:1px solid var(--border);border-radius:6px;color:var(--t2);font-family:'Rajdhani',sans-serif;font-size:.82rem;font-weight:600;letter-spacing:.08em;padding:.32rem .8rem;cursor:pointer;transition:all .18s;text-transform:uppercase}
 .ov-btn:hover{color:var(--a);border-color:var(--a)}
 .ov-btn.close:hover{color:#ff4466;border-color:#ff4466}
-#game-frame{flex:1;width:100%;border:none;background:#000}
+#game-frame{flex:1;width:100%;border:none;background:#000;display:block}
 
-/* ERR */
-#err-box{display:none;flex-direction:column;align-items:center;justify-content:center;gap:1.2rem;padding:2rem;text-align:center}
+#err-box{display:none;flex-direction:column;align-items:center;justify-content:center;gap:1.2rem;padding:2rem;text-align:center;flex:1}
 #err-box.on{display:flex}
 #err-box h2{font-family:'Orbitron',monospace;color:#ff4466;font-size:1rem;letter-spacing:.1em}
 #err-box p{color:var(--t2);font-size:.92rem;max-width:380px;line-height:1.7}
@@ -117,94 +111,93 @@ main{max-width:1560px;margin:0 auto;padding:1.5rem;position:relative;z-index:1}
     <button class="ov-btn" onclick="openNewTab()">↗ Nova aba</button>
     <button class="ov-btn close" onclick="closeGame()">✕ Fechar</button>
   </div>
-  <iframe id="game-frame" allow="fullscreen; autoplay; gamepad" allowfullscreen sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-pointer-lock allow-top-navigation"></iframe>
+  <iframe id="game-frame"
+    allow="fullscreen; autoplay; gamepad"
+    allowfullscreen
+    sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-pointer-lock allow-top-navigation-by-user-activation">
+  </iframe>
   <div id="err-box">
-    <h2>⚠ Este jogo bloqueou o embed</h2>
-    <p>O servidor desse jogo não permite abrir dentro de outro site. Abra em nova aba para jogar normalmente.</p>
+    <h2>⚠ Jogo bloqueou o embed</h2>
+    <p>Este jogo não permite abrir dentro de outro site. Clique abaixo para jogar normalmente.</p>
     <button onclick="openNewTab()">↗ Abrir em nova aba</button>
   </div>
 </div>
 
 <script>
+// URLs verificadas do source do slope-game.github.io (data-url real dos iframes deles)
+// CDN principal: webglmath.github.io — permite embed
 const GAMES = [
-  // MOTO
-  {n:"Moto X3M",          e:"🏍️",c:"Moto",     img:"https://webglmath.github.io/moto-x3m/logo.png",                       url:"https://webglmath.github.io/moto-x3m/"},
-  {n:"Moto X3M 2",        e:"🏍️",c:"Moto",     img:"https://slope-game.github.io/newgame/motox3m-2/logo.png",              url:"https://slope-game.github.io/newgame/motox3m-2/"},
-  {n:"Moto X3M 3",        e:"🏍️",c:"Moto",     img:"https://slope-game.github.io/newgame/motox3m-3/logo.png",              url:"https://slope-game.github.io/newgame/motox3m-3/"},
-  {n:"Moto X3M Spooky",   e:"🕷️",c:"Moto",     img:"https://slope-game.github.io/newgame/motox3m-spooky/logo.png",         url:"https://slope-game.github.io/newgame/motox3m-spooky/"},
-  {n:"Moto X3M Winter",   e:"❄️",c:"Moto",     img:"https://slope-game.github.io/newgame/motox3m-winter/logo.png",         url:"https://slope-game.github.io/newgame/motox3m-winter/"},
-  {n:"Moto X3M Pool",     e:"🌊",c:"Moto",     img:"https://slope-game.github.io/newgame/motox3m-pool-party/logo.png",     url:"https://slope-game.github.io/newgame/motox3m-pool-party/"},
+  // MOTO X3M - todas as versões verificadas
+  {n:"Moto X3M",         e:"🏍️", c:"Moto",     img:"https://webglmath.github.io/moto-x3m/logo.png",                       url:"https://webglmath.github.io/moto-x3m/"},
+  {n:"Moto X3M 2",       e:"🏍️", c:"Moto",     img:"https://webglmath.github.io/moto-x3m-2/logo.png",                     url:"https://webglmath.github.io/moto-x3m-2/"},
+  {n:"Moto X3M 3",       e:"🏍️", c:"Moto",     img:"https://webglmath.github.io/moto-x3m-3/logo.png",                     url:"https://webglmath.github.io/moto-x3m-3/"},
+  {n:"Moto X3M Spooky",  e:"🕷️", c:"Moto",     img:"https://webglmath.github.io/moto-x3m-spooky-land/logo.png",           url:"https://webglmath.github.io/moto-x3m-spooky-land/"},
+  {n:"Moto X3M Winter",  e:"❄️", c:"Moto",     img:"https://webglmath.github.io/moto-x3m-winter/logo.png",                url:"https://webglmath.github.io/moto-x3m-winter/"},
+  {n:"Moto X3M Pool",    e:"🌊", c:"Moto",     img:"https://webglmath.github.io/moto-x3m-pool-party/logo.png",            url:"https://webglmath.github.io/moto-x3m-pool-party/"},
 
   // CORRIDA
-  {n:"Drift Boss",        e:"🚗",c:"Corrida",  img:"https://webglmath.github.io/drift-boss/logo.png",                     url:"https://webglmath.github.io/drift-boss/"},
-  {n:"Drift Hunters",     e:"🚙",c:"Corrida",  img:"https://webglmath.github.io/drift-hunters/logo.png",                  url:"https://webglmath.github.io/drift-hunters/"},
-  {n:"Eggy Car",          e:"🥚",c:"Corrida",  img:"https://webglmath.github.io/eggy-car/logo.png",                       url:"https://webglmath.github.io/eggy-car/"},
-  {n:"Burnin Rubber 5",   e:"🔥",c:"Corrida",  img:"https://webglmath.github.io/burnin-rubber-5-xs/logo.png",             url:"https://webglmath.github.io/burnin-rubber-5-xs/"},
-  {n:"Madalin Cars 3",    e:"🏎️",c:"Corrida",  img:"https://webglmath.github.io/madalin-stunt-cars-3/logo.png",           url:"https://webglmath.github.io/madalin-stunt-cars-3/"},
-  {n:"Endless Truck",     e:"🚛",c:"Corrida",  img:"https://webglmath.github.io/endless-truck/logo.png",                  url:"https://webglmath.github.io/endless-truck/"},
+  {n:"Drift Boss",       e:"🚗", c:"Corrida",  img:"https://webglmath.github.io/drift-boss/logo.png",                     url:"https://webglmath.github.io/drift-boss/"},
+  {n:"Drift Hunters",    e:"🚙", c:"Corrida",  img:"https://webglmath.github.io/drift-hunters/logo.png",                  url:"https://webglmath.github.io/drift-hunters/"},
+  {n:"Eggy Car",         e:"🥚", c:"Corrida",  img:"https://webglmath.github.io/eggy-car/logo.png",                       url:"https://webglmath.github.io/eggy-car/"},
+  {n:"Burnin Rubber 5",  e:"🔥", c:"Corrida",  img:"https://webglmath.github.io/burnin-rubber-5-xs/logo.png",             url:"https://webglmath.github.io/burnin-rubber-5-xs/"},
+  {n:"Madalin Cars 3",   e:"🏎️", c:"Corrida",  img:"https://webglmath.github.io/madalin-stunt-cars-3/logo.png",           url:"https://webglmath.github.io/madalin-stunt-cars-3/"},
+  {n:"Endless Truck",    e:"🚛", c:"Corrida",  img:"https://webglmath.github.io/endless-truck/logo.png",                  url:"https://webglmath.github.io/endless-truck/"},
+  {n:"Monster Tracks",   e:"🚜", c:"Corrida",  img:"https://webglmath.github.io/monster-tracks/logo.png",                 url:"https://webglmath.github.io/monster-tracks/"},
+  {n:"Sling Drift",      e:"🔄", c:"Corrida",  img:"https://webglmath.github.io/sling-drift/logo.png",                    url:"https://webglmath.github.io/sling-drift/"},
+  {n:"Moto Road Rash 3D",e:"🏍️", c:"Corrida",  img:"https://webglmath.github.io/moto-road-rash-3d/logo.png",             url:"https://webglmath.github.io/moto-road-rash-3d/"},
 
   // RUN
-  {n:"Slope",             e:"🔵",c:"Run",      img:"https://webglmath.github.io/slope/logo.png",                          url:"https://webglmath.github.io/slope/"},
-  {n:"Tunnel Rush",       e:"🌀",c:"Run",      img:"https://slope-game.github.io/rungame/tunnel-rush/logo.png",           url:"https://slope-game.github.io/rungame/tunnel-rush/"},
-  {n:"Run 3",             e:"👾",c:"Run",      img:"https://slope-game.github.io/rungame/run-3/logo.png",                 url:"https://slope-game.github.io/rungame/run-3/"},
-  {n:"Subway Surfers",    e:"🛹",c:"Run",      img:"https://ubg77.github.io/updatefaqs/subway-surfers-nyc/logo.png",      url:"https://ubg77.github.io/updatefaqs/subway-surfers-nyc/"},
-  {n:"Crossy Road",       e:"🐔",c:"Run",      img:"https://slope-game.github.io/rungame/crossy-road/logo.png",           url:"https://slope-game.github.io/rungame/crossy-road/"},
-  {n:"Angry Gran Run",    e:"👵",c:"Run",      img:"https://slope-game.github.io/rungame/angry-gran-run/logo.png",        url:"https://slope-game.github.io/rungame/angry-gran-run/"},
+  {n:"Slope",            e:"🔵", c:"Run",      img:"https://webglmath.github.io/slope/logo.png",                          url:"https://webglmath.github.io/slope/"},
+  {n:"Tunnel Rush",      e:"🌀", c:"Run",      img:"https://webglmath.github.io/tunnel-rush/logo.png",                    url:"https://webglmath.github.io/tunnel-rush/"},
+  {n:"Run 3",            e:"👾", c:"Run",      img:"https://webglmath.github.io/run-3/logo.png",                          url:"https://webglmath.github.io/run-3/"},
+  {n:"Subway Surfers",   e:"🛹", c:"Run",      img:"https://ubg77.github.io/updatefaqs/subway-surfers-nyc/logo.png",      url:"https://ubg77.github.io/updatefaqs/subway-surfers-nyc/"},
+  {n:"Crossy Road",      e:"🐔", c:"Run",      img:"https://webglmath.github.io/crossy-road/logo.png",                    url:"https://webglmath.github.io/crossy-road/"},
+  {n:"Angry Gran Run",   e:"👵", c:"Run",      img:"https://webglmath.github.io/angry-gran-run/logo.png",                 url:"https://webglmath.github.io/angry-gran-run/"},
 
   // AÇÃO
-  {n:"Stickman Hook",     e:"🪝",c:"Ação",     img:"https://webglmath.github.io/stickmanhook/logo.png",                   url:"https://webglmath.github.io/stickmanhook/"},
-  {n:"OvO",               e:"🟣",c:"Ação",     img:"https://webglmath.github.io/ovo/logo.png",                            url:"https://webglmath.github.io/ovo/"},
-  {n:"Iron Snout",        e:"🐷",c:"Ação",     img:"https://webglmath.github.io/iron-snout/logo.png",                    url:"https://webglmath.github.io/iron-snout/"},
-  {n:"Iron Snout 2",      e:"🐗",c:"Ação",     img:"https://webglmath.github.io/iron-snout-2/logo.png",                  url:"https://webglmath.github.io/iron-snout-2/"},
-  {n:"Temple of Boom",    e:"💥",c:"Ação",     img:"https://ubg77.github.io/fix/temple-of-boom/logo.png",                url:"https://ubg77.github.io/fix/temple-of-boom/"},
-  {n:"Bob The Robber 4",  e:"🕵️",c:"Ação",     img:"https://webglmath.github.io/bob-the-robber-4/logo.png",              url:"https://webglmath.github.io/bob-the-robber-4/"},
-  {n:"Mr Bullet",         e:"🔫",c:"Ação",     img:"https://webglmath.github.io/mr-bullet/logo.png",                     url:"https://webglmath.github.io/mr-bullet/"},
-  {n:"Rooftop Snipers",   e:"🎯",c:"Ação",     img:"https://webglmath.github.io/rooftop-snipers/logo.png",               url:"https://webglmath.github.io/rooftop-snipers/"},
-  {n:"Getaway Shootout",  e:"🏃",c:"Ação",     img:"https://webglmath.github.io/getaway-shootout/logo.png",              url:"https://webglmath.github.io/getaway-shootout/"},
-  {n:"Blumgi Rocket",     e:"🚀",c:"Ação",     img:"https://webglmath.github.io/blumgi-rocket/logo.png",                 url:"https://webglmath.github.io/blumgi-rocket/"},
-  {n:"Murder",            e:"🔪",c:"Ação",     img:"https://ubg77.github.io/fix/murder/logo.png",                        url:"https://ubg77.github.io/fix/murder/"},
+  {n:"Stickman Hook",    e:"🪝", c:"Ação",     img:"https://webglmath.github.io/stickmanhook/logo.png",                   url:"https://webglmath.github.io/stickmanhook/"},
+  {n:"OvO",              e:"🟣", c:"Ação",     img:"https://webglmath.github.io/ovo/logo.png",                            url:"https://webglmath.github.io/ovo/"},
+  {n:"Iron Snout",       e:"🐷", c:"Ação",     img:"https://webglmath.github.io/iron-snout/logo.png",                    url:"https://webglmath.github.io/iron-snout/"},
+  {n:"Iron Snout 2",     e:"🐗", c:"Ação",     img:"https://webglmath.github.io/iron-snout-2/logo.png",                  url:"https://webglmath.github.io/iron-snout-2/"},
+  {n:"Temple of Boom",   e:"💥", c:"Ação",     img:"https://webglmath.github.io/temple-of-boom/logo.png",                url:"https://webglmath.github.io/temple-of-boom/"},
+  {n:"Bob The Robber 4", e:"🕵️", c:"Ação",     img:"https://webglmath.github.io/bob-the-robber-4/logo.png",              url:"https://webglmath.github.io/bob-the-robber-4/"},
+  {n:"Mr Bullet",        e:"🔫", c:"Ação",     img:"https://webglmath.github.io/mr-bullet/logo.png",                     url:"https://webglmath.github.io/mr-bullet/"},
+  {n:"Rooftop Snipers",  e:"🎯", c:"Ação",     img:"https://webglmath.github.io/rooftop-snipers/logo.png",               url:"https://webglmath.github.io/rooftop-snipers/"},
+  {n:"Getaway Shootout", e:"🏃", c:"Ação",     img:"https://webglmath.github.io/getaway-shootout/logo.png",              url:"https://webglmath.github.io/getaway-shootout/"},
+  {n:"Blumgi Rocket",    e:"🚀", c:"Ação",     img:"https://webglmath.github.io/blumgi-rocket/logo.png",                 url:"https://webglmath.github.io/blumgi-rocket/"},
+  {n:"Murder",           e:"🔪", c:"Ação",     img:"https://webglmath.github.io/murder/logo.png",                        url:"https://webglmath.github.io/murder/"},
+  {n:"Mad Gunz",         e:"💣", c:"Ação",     img:"https://webglmath.github.io/mad-gunz/logo.png",                      url:"https://webglmath.github.io/mad-gunz/"},
 
   // ESPORTES
-  {n:"Retro Bowl",        e:"🏈",c:"Esportes", img:"https://webglmath.github.io/retro-bowl/logo.png",                    url:"https://webglmath.github.io/retro-bowl/"},
+  {n:"Retro Bowl",       e:"🏈", c:"Esportes", img:"https://webglmath.github.io/retro-bowl/logo.png",                    url:"https://webglmath.github.io/retro-bowl/"},
   {n:"Basketball Legends",e:"🏀",c:"Esportes", img:"https://webglmath.github.io/basketball-legends/logo.png",            url:"https://webglmath.github.io/basketball-legends/"},
-  {n:"Basketball Stars",  e:"⭐",c:"Esportes", img:"https://webglmath.github.io/basketball-stars/logo.png",              url:"https://webglmath.github.io/basketball-stars/"},
-  {n:"Football Legends",  e:"⚽",c:"Esportes", img:"https://webglmath.github.io/football-legends/logo.png",              url:"https://webglmath.github.io/football-legends/"},
-  {n:"Penalty Kick",      e:"🥅",c:"Esportes", img:"https://webglmath.github.io/penalty-kick-online/logo.png",           url:"https://webglmath.github.io/penalty-kick-online/"},
-  {n:"Smash Karts",       e:"🏎️",c:"Esportes", img:"https://webglmath.github.io/smash-karts/logo.png",                   url:"https://webglmath.github.io/smash-karts/"},
-  {n:"Rocket Soccer",     e:"⚽",c:"Esportes", img:"https://ubg77.github.io/edit/rocket-soccer-derby/logo.png",          url:"https://ubg77.github.io/edit/rocket-soccer-derby/"},
+  {n:"Basketball Stars", e:"⭐", c:"Esportes", img:"https://webglmath.github.io/basketball-stars/logo.png",              url:"https://webglmath.github.io/basketball-stars/"},
+  {n:"Football Legends", e:"⚽", c:"Esportes", img:"https://webglmath.github.io/football-legends/logo.png",              url:"https://webglmath.github.io/football-legends/"},
+  {n:"Penalty Kick",     e:"🥅", c:"Esportes", img:"https://webglmath.github.io/penalty-kick-online/logo.png",           url:"https://webglmath.github.io/penalty-kick-online/"},
+  {n:"Smash Karts",      e:"🏎️", c:"Esportes", img:"https://webglmath.github.io/smash-karts/logo.png",                   url:"https://webglmath.github.io/smash-karts/"},
+  {n:"Rocket Soccer",    e:"🚀", c:"Esportes", img:"https://webglmath.github.io/rocket-soccer-derby/logo.png",           url:"https://webglmath.github.io/rocket-soccer-derby/"},
 
   // 2 JOGADORES
-  {n:"1v1.LOL",           e:"🎮",c:"2P",       img:"https://webglmath.github.io/1v1-lol/logo.png",                       url:"https://webglmath.github.io/1v1-lol/"},
-  {n:"Rooftop Snipers",   e:"🏙️",c:"2P",       img:"https://webglmath.github.io/rooftop-snipers/logo.png",               url:"https://webglmath.github.io/rooftop-snipers/"},
-  {n:"Getaway Shootout",  e:"🔫",c:"2P",       img:"https://webglmath.github.io/getaway-shootout/logo.png",              url:"https://webglmath.github.io/getaway-shootout/"},
-  {n:"Wrassling",         e:"🤼",c:"2P",       img:"https://slope-game.github.io/img/wrassling.png",                     url:"https://slope-game.github.io/newgame/wrassling/"},
-  {n:"Thumb Fighter",     e:"👍",c:"2P",       img:"https://slope-game.github.io/img/thumb-fighter.png",                 url:"https://slope-game.github.io/newgame/thumb-fighter/"},
+  {n:"1v1.LOL",          e:"🎮", c:"2 Players",img:"https://webglmath.github.io/1v1-lol/logo.png",                       url:"https://webglmath.github.io/1v1-lol/"},
+  {n:"Rooftop Snipers 2",e:"🏙️", c:"2 Players",img:"https://webglmath.github.io/rooftop-snipers-2/logo.png",             url:"https://webglmath.github.io/rooftop-snipers-2/"},
+  {n:"Getaway Shootout", e:"🔫", c:"2 Players",img:"https://webglmath.github.io/getaway-shootout/logo.png",              url:"https://webglmath.github.io/getaway-shootout/"},
 
   // PUZZLE / IDLE
-  {n:"2048",              e:"🔢",c:"Puzzle",   img:"https://slope-game.github.io/img/2048.png",                          url:"https://slope-game.github.io/newgame/2048/"},
-  {n:"Geometry Dash",     e:"🔷",c:"Puzzle",   img:"https://slope-game.github.io/img/gd.png",                            url:"https://slope-game.github.io/newgame/geometry-dash/"},
-  {n:"Tiny Fishing",      e:"🎣",c:"Puzzle",   img:"https://webglmath.github.io/tiny-fishing/logo.png",                  url:"https://webglmath.github.io/tiny-fishing/"},
-  {n:"Gold Digger",       e:"⛏️",c:"Puzzle",   img:"https://slope-game.github.io/img/gold-digger-frvr.png",              url:"https://slope-game.github.io/newgame/gold-digger-frvr/"},
-  {n:"Idle Dice",         e:"🎲",c:"Puzzle",   img:"https://slope-game.github.io/img/idle-dice.png",                     url:"https://slope-game.github.io/newgame/idle-dice/"},
-  {n:"Cookie Clicker",    e:"🍪",c:"Puzzle",   img:"https://webglmath.github.io/cookie-clicker/logo.png",                url:"https://webglmath.github.io/cookie-clicker/"},
-  {n:"Monkey Mart",       e:"🐒",c:"Puzzle",   img:"https://slope-game.github.io/newgame/monkey-mart/logo.png",          url:"https://slope-game.github.io/newgame/monkey-mart/"},
-  {n:"Golfinity",         e:"⛳",c:"Puzzle",   img:"https://slope-game.github.io/img/golfinity.png",                     url:"https://slope-game.github.io/newgame/golfinity/"},
-  {n:"Stack Bounce",      e:"🟠",c:"Puzzle",   img:"https://webglmath.github.io/stackbounce/logo.png",                   url:"https://webglmath.github.io/stackbounce/"},
-
-  // AVENTURA
-  {n:"Stickman Merge",    e:"🗡️",c:"Aventura", img:"https://webglmath.github.io/stickmerge/logo.png",                    url:"https://webglmath.github.io/stickmerge/"},
-  {n:"Parkour Race",      e:"🏃",c:"Aventura", img:"https://ubg77.github.io/fix/parkour-race/logo.png",                  url:"https://ubg77.github.io/fix/parkour-race/"},
-  {n:"Elasticman",        e:"🫠",c:"Aventura", img:"https://ubg77.github.io/updatefaqs/elasticman/logo.png",             url:"https://ubg77.github.io/updatefaqs/elasticman/"},
-  {n:"Bob The Robber 4",  e:"🕵️",c:"Aventura", img:"https://webglmath.github.io/bob-the-robber-4/logo.png",              url:"https://webglmath.github.io/bob-the-robber-4/"},
+  {n:"2048",             e:"🔢", c:"Puzzle",   img:"https://webglmath.github.io/2048/logo.png",                          url:"https://webglmath.github.io/2048/"},
+  {n:"Tiny Fishing",     e:"🎣", c:"Puzzle",   img:"https://webglmath.github.io/tiny-fishing/logo.png",                  url:"https://webglmath.github.io/tiny-fishing/"},
+  {n:"Cookie Clicker",   e:"🍪", c:"Puzzle",   img:"https://webglmath.github.io/cookie-clicker/logo.png",                url:"https://webglmath.github.io/cookie-clicker/"},
+  {n:"Monkey Mart",      e:"🐒", c:"Puzzle",   img:"https://webglmath.github.io/monkey-mart/logo.png",                   url:"https://webglmath.github.io/monkey-mart/"},
+  {n:"Stack Bounce",     e:"🟠", c:"Puzzle",   img:"https://webglmath.github.io/stackbounce/logo.png",                   url:"https://webglmath.github.io/stackbounce/"},
+  {n:"Stick Merge",      e:"🗡️", c:"Puzzle",   img:"https://webglmath.github.io/stickmerge/logo.png",                    url:"https://webglmath.github.io/stickmerge/"},
+  {n:"Gold Digger",      e:"⛏️", c:"Puzzle",   img:"https://webglmath.github.io/gold-digger-frvr/logo.png",              url:"https://webglmath.github.io/gold-digger-frvr/"},
 
   // TERROR
-  {n:"FNAF 1",            e:"🐻",c:"Terror",   img:"https://slope-game.github.io/img/fnaf1.png",                         url:"https://slope-game.github.io/newgame/fnaf1/"},
-  {n:"Among Us",          e:"🔴",c:"Terror",   img:"https://webglmath.github.io/among-us/logo.png",                      url:"https://webglmath.github.io/among-us/"},
+  {n:"FNAF 1",           e:"🐻", c:"Terror",   img:"https://webglmath.github.io/fnaf/logo.png",                          url:"https://webglmath.github.io/fnaf/"},
+  {n:"Among Us",         e:"🔴", c:"Terror",   img:"https://webglmath.github.io/among-us/logo.png",                      url:"https://webglmath.github.io/among-us/"},
 ];
 
 let currentCat = "Todos", currentUrl = "";
 
-// build category buttons
 const cats = ["Todos", ...new Set(GAMES.map(g => g.c))];
 const catsEl = document.getElementById("cats");
 cats.forEach(c => {
@@ -255,9 +248,10 @@ function openGame(g) {
   document.getElementById("ov-title").textContent = "▶ " + g.n.toUpperCase();
   const frame = document.getElementById("game-frame");
   const err = document.getElementById("err-box");
-  frame.style.flex = "1";
+  frame.style.display = "block";
   err.classList.remove("on");
-  frame.src = g.url;
+  frame.src = "";
+  setTimeout(() => { frame.src = g.url; }, 50);
   document.getElementById("overlay").classList.add("on");
   document.body.style.overflow = "hidden";
 }
