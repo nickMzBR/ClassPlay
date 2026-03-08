@@ -3,53 +3,130 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Class Unblocker | Stealth</title>
+    <title>Class Unblocker | Pure Stealth</title>
     <style>
-        body { background-color: #222; color: #fff; font-family: sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; }
-        .container { text-align: center; }
-        h1 { color: #007bff; text-transform: uppercase; }
-        input { padding: 15px; width: 300px; background: #333; border: 2px solid #007bff; color: white; border-radius: 5px; outline: none; }
-        button { padding: 15px; background: #007bff; border: none; color: white; cursor: pointer; border-radius: 5px; font-weight: bold; }
-        button:hover { background: #0056b3; }
+        /* Estética Dark Tech */
+        body {
+            background-color: #222;
+            color: #fff;
+            font-family: 'Segoe UI', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .box {
+            background: #2a2a2a;
+            padding: 40px;
+            border-radius: 15px;
+            border: 1px solid #007bff;
+            box-shadow: 0 0 20px rgba(0, 123, 255, 0.2);
+            text-align: center;
+        }
+
+        h1 {
+            color: #007bff;
+            margin-bottom: 25px;
+            letter-spacing: 1px;
+        }
+
+        input {
+            width: 300px;
+            padding: 12px;
+            background: #111;
+            border: 1px solid #444;
+            color: #00ff00; /* Estilo terminal */
+            border-radius: 5px;
+            outline: none;
+            font-family: monospace;
+        }
+
+        button {
+            padding: 12px 25px;
+            background: #007bff;
+            border: none;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-left: 10px;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background: #0056b3;
+            box-shadow: 0 0 10px #007bff;
+        }
+
+        .footer {
+            margin-top: 20px;
+            font-size: 0.8rem;
+            color: #666;
+        }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <h1>Class Unblocker</h1>
-        <input type="text" id="urlInput" placeholder="Ex: google.com">
-        <button onclick="launch()">Abrir</button>
+    <div class="box">
+        <h1>UNBLOCKER</h1>
+        <input type="text" id="urlInput" placeholder="https://exemplo.com">
+        <button onclick="launch()">EXECUTAR</button>
+        <div class="footer">O site abrirá em uma aba about:blank</div>
     </div>
 
-    <script src="/uv/uv.bundle.js"></script>
-    <script src="/uv/uv.config.js"></script>
-
     <script>
-        async function launch() {
-            const url = document.getElementById('urlInput').value;
-            if (!url) return;
-
-            // 1. Abre a aba em branco primeiro
-            const win = window.open('about:blank', '_blank');
-            if (!win) {
-                alert("Ative os pop-ups para funcionar!");
+        function launch() {
+            let url = document.getElementById('urlInput').value;
+            
+            if (!url) {
+                alert("Insira uma URL válida");
                 return;
             }
 
-            // 2. Codifica a URL para o formato do Ultraviolet
-            // Isso evita o erro de "Tela Branca" (CORS)
-            const proxiedUrl = __uv$config.prefix + __uv$config.encodeUrl(url);
+            // Garante o prefixo https
+            if (!url.startsWith('http')) {
+                url = 'https://' + url;
+            }
 
-            // 3. Escreve o conteúdo diretamente no about:blank
-            // Usamos um script de carregamento para garantir que o CSS e JS do site funcionem
-            win.document.write(`
-                <title>Google Drive</title>
-                <style>body { margin: 0; padding: 0; overflow: hidden; background: #000; }</style>
-                <script>
-                    window.location.href = "${window.location.origin}${proxiedUrl}";
-                <\/script>
-            `);
+            // Abre a janela about:blank
+            const win = window.open('about:blank', '_blank');
+            
+            if (!win) {
+                alert("Por favor, permita pop-ups para este site.");
+                return;
+            }
+
+            // Define o conteúdo da nova aba
+            // Usamos um estilo que ocupa 100% da tela para o site aparecer direto
+            const content = `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>Classes</title>
+                    <style>
+                        body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; }
+                        embed { width: 100%; height: 100%; border: none; }
+                    </style>
+                </head>
+                <body>
+                    <embed src="${url}" type="text/html">
+                </body>
+                </html>
+            `;
+
+            // Escreve o código na aba about:blank
+            win.document.open();
+            win.document.write(content);
+            win.document.close();
         }
+
+        // Atalho para o Enter
+        document.getElementById('urlInput').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') launch();
+        });
     </script>
 </body>
 </html>
