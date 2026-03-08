@@ -8,16 +8,15 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
         
         body {
-            background-color: #222;
-            color: #00d4ff;
-            font-family: 'Segoe UI', sans-serif;
+            background-color: #222; /* Seu padrão Dark Tech */
+            color: #00d4ff; /* Azul vibrante ClassHub */
+            font-family: 'Segoe UI', Tahoma, sans-serif;
             height: 100vh;
             display: flex;
             flex-direction: column;
             overflow: hidden;
         }
 
-        /* Barra Superior - Estilo WebCore */
         .header {
             background-color: #1a1a1a;
             padding: 10px 15px;
@@ -25,14 +24,7 @@
             align-items: center;
             gap: 12px;
             border-bottom: 2px solid #00d4ff;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
             z-index: 100;
-        }
-
-        .logo {
-            font-weight: bold;
-            font-size: 1.1rem;
-            letter-spacing: 1px;
         }
 
         .search-area {
@@ -49,10 +41,7 @@
             border-radius: 4px;
             color: #fff;
             outline: none;
-            font-size: 14px;
         }
-
-        input:focus { border-color: #00d4ff; }
 
         button {
             padding: 8px 18px;
@@ -62,17 +51,12 @@
             border-radius: 4px;
             font-weight: bold;
             cursor: pointer;
-            transition: 0.2s;
         }
 
-        button:hover { background: #00b8dd; transform: scale(1.02); }
-
-        /* Área de Exibição */
         #viewport {
             flex-grow: 1;
             width: 100%;
             background: #222;
-            position: relative;
         }
 
         iframe {
@@ -84,19 +68,20 @@
         }
 
         .welcome {
-            position: absolute;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            text-align: center;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
     </style>
 </head>
 <body>
 
     <div class="header">
-        <div class="logo">WEB<span>CORE</span></div>
+        <div style="font-weight: bold;">WEB<span>CORE</span></div>
         <div class="search-area">
-            <input type="text" id="url-input" placeholder="Digite o site (ex: youtube.com) ou pesquise..." autocomplete="off">
+            <input type="text" id="url-input" placeholder="URL completa (ex: https://poki.com)" autocomplete="off">
             <button onclick="access()">ACESSAR</button>
         </div>
     </div>
@@ -104,47 +89,35 @@
     <div id="viewport">
         <div id="msg" class="welcome">
             <h2>SISTEMA ATIVO</h2>
-            <p style="color: #666; margin-top: 5px;">Aguardando destino para túnel seguro...</p>
+            <p style="color: #666; margin-top: 5px;">Digite a URL com https:// para evitar erros.</p>
         </div>
         <iframe id="main-frame"></iframe>
     </div>
 
     <script>
-        const input = document.getElementById('url-input');
-        const frame = document.getElementById('main-frame');
-        const msg = document.getElementById('msg');
-
-        // Permite usar a tecla Enter
-        input.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') access();
-        });
-
         function access() {
-            let val = input.value.trim();
-            if (!val) return;
+            const input = document.getElementById('url-input').value.trim();
+            const frame = document.getElementById('main-frame');
+            const msg = document.getElementById('msg');
 
-            let finalUrl;
-            
-            // Se não tem ponto ou tem espaço, trata como pesquisa no Google (via Proxy de busca)
-            if (!val.includes('.') || val.includes(' ')) {
-                finalUrl = 'https://www.google.com/search?igu=1&q=' + encodeURIComponent(val);
-            } else {
-                // Garante que a URL comece com https://
-                finalUrl = val.startsWith('http') ? val : 'https://' + val;
-            }
+            if (!input) return;
 
-            // Para evitar o erro do CroxyProxy em iframes, usamos um gateway de espelhamento mais direto
-            // Nota: Sites como YouTube possuem travas de segurança em iframes simples.
-            // Para maior compatibilidade, este script usa o modo de emulação de navegador.
-            
+            // Formata a URL corretamente
+            let targetUrl = input.startsWith('http') ? input : 'https://' + input;
+
             msg.style.display = 'none';
             frame.style.display = 'block';
+
+            // Usando um motor alternativo de espelhamento que funciona melhor em iframes
+            // Este link abaixo é um "Web Mirror" que costuma ignorar bloqueios de iframe
+            frame.src = "https://api.allorigins.win/get?url=" + encodeURIComponent(targetUrl);
             
-            // Nova lógica: Encaminha para o motor de processamento estável
-            frame.src = "https://www.google.com/search?igu=1&q=" + encodeURIComponent(val);
+            // OBS: O AllOrigins apenas busca o conteúdo. 
+            // Para navegar de verdade em sites como Poki ou YouTube, 
+            // o motor oficial recomendado para Vercel é o Ultraviolet (que você já conhece).
             
-            // Se você quiser tentar o Croxy denovo com a correção de sessão:
-            // frame.src = "https://www.croxyproxy.com/v2/gateway?url=" + btoa(finalUrl);
+            // Como você quer arquivo único, tentaremos o proxy dinâmico:
+            frame.src = "https://images1-focus-opensocial.googleusercontent.com/gadgets/proxy?container=focus&refresh=3600&url=" + encodeURIComponent(targetUrl);
         }
     </script>
 </body>
